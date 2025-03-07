@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "module": "CommonJS",
+      "declaration": true,
+      "removeComments": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "allowSyntheticDefaultImports": true,
+      "strictNullChecks": true,
+      "strictPropertyInitialization": false,
+      "target": "ES6",
+      "moduleResolution": "Node",
+      "sourceMap": true,
+      "outDir": "./dist",
+      "baseUrl": "./",
+      "paths": {
+        "@app/*": ["src/*"]
+      }
+    },
+    "exclude": ["node_modules", "dist"]
+  }
+  

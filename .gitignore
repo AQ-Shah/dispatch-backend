@@ -1,0 +1,20 @@
+# Ignore node modules and build files
+node_modules/
+dist/
+coverage/
+test/
+
+# Ignore environment files
+.env
+
+# Ignore editor configurations
+.vscode/
+.idea/
+.DS_Store
+
+# Ignore logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
