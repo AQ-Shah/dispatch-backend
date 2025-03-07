@@ -12,6 +12,16 @@ export class Company {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  email: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  phone: string;
+
+
   @OneToMany(() => Carrier, (carrier) => carrier.company)
   carriers: Carrier[];
 

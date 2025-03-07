@@ -5,4 +5,14 @@ export class CreateCompanyDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsString()
+  email: string;
+
+  @IsString()
+  address: string;
+
+  @IsString()
+  phone: string;
+  
 }
