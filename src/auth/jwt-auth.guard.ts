@@ -17,11 +17,12 @@ export class JwtAuthGuard implements CanActivate {
     const token = authHeader.split(' ')[1];
 
     try {
-      const decoded = this.jwtService.verify(token);
-      request.user = decoded; // Attach the decoded user info to the request
+      const decoded = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+      request.user = decoded;
       return true;
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
+    
   }
 }

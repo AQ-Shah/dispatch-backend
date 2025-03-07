@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
+import { CompaniesModule } from './companies/companies.module';
 import { CarriersModule } from './carriers/carriers.module';
 import { UsersModule } from './users/users.module';
 import { TrucksModule } from './trucks/trucks.module';
@@ -42,6 +43,7 @@ import { AuthGuard } from './auth/auth.guard';
     }),
     TypeOrmModule.forFeature([Carrier, User, Department, Company]),
     AuthModule,
+    CompaniesModule,
     CarriersModule,
     UsersModule,
     TrucksModule,
