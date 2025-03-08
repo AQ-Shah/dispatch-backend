@@ -6,7 +6,6 @@ import { Role } from '../roles/roles.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +22,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({ 
       where: { email },
-      relations: ['roles', 'roles.permissions'],
+      relations: ['roles', 'roles.permissions', 'company'],
     });
 
     if (!user) {
@@ -44,6 +43,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       username: user.username,
+      company: user.company || null,
       roles,
       permissions, 
     };
@@ -52,11 +52,4 @@ export class AuthService {
     return { accessToken: token, user: payload };
   }
 
-  async register(registerDto: RegisterDto): Promise<{ message: string }> {
-    const { email, password, username } = registerDto;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = this.userRepository.create({ email, username, hashed_password: hashedPassword });
-    await this.userRepository.save(user);
-    return { message: 'User registered successfully' };
-  }
 }

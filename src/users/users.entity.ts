@@ -12,22 +12,50 @@ export class User {
 
   @Column()
   username: string;
-
-  @Column()
+  
+  @Column({ unique: true })
   email: string;
+  
 
   @Column()
   hashed_password: string;
 
-  @ManyToOne(() => Company, { nullable: true, onDelete: 'SET NULL' }) // Super Admin won't have a company
+  @Column()
+  designation	: string;
+
+  @Column()
+  phone	: string;
+
+  @Column()
+  emergency_phone	: string;
+
+  @Column()
+  gender	: string;
+
+  @Column()
+  dob	: Date;
+
+  @Column()
+  join_date	: Date;
+
+  @Column()
+  leaving_date	: Date;
+
+  @Column({ default: 'employed' })
+  current_status: string;
+
+  @Column()
+  photo_path : string;
+
+  @ManyToOne(() => Company, { nullable: true, onDelete: 'SET NULL' }) 
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
-  @ManyToOne(() => Department, { nullable: true, onDelete: 'SET NULL' }) // Managers, Admins, and Executives will have a department
+  @ManyToOne(() => Department, { nullable: true, onDelete: 'SET NULL' }) 
   @JoinColumn({ name: 'department_id' })
   department: Department;
 
-  @ManyToOne(() => Team, { nullable: true, eager: true, onDelete: 'SET NULL' }) // Only supervisors, dispatchers, and sales agents have a team
+  @ManyToOne(() => Team, { nullable: true, eager: true, onDelete: 'SET NULL' }) 
   @JoinColumn({ name: 'team_id' })
   team: Team;
   
