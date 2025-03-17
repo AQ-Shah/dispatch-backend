@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param,Request,UsePipes, ValidationPipe,  UseGuards, ForbiddenException} from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param,Request,UsePipes, ValidationPipe,  UseGuards, ForbiddenException, Put, Req} from '@nestjs/common';
 import { DepartmentsService } from './departments.service';
 import { Department } from './departments.entity';
 import { CreateDepartmentDto } from './dto/create-department.dto';
@@ -36,25 +36,84 @@ export class DepartmentsController {
     const isSuperAdmin = user.permissions.includes('manage_all_companies');
     const hasCompanyPermission = user.permissions.includes('manage_company_departments');
 
-    if (isSuperAdmin) {
-      return this.departmentsService.findAll();
-    } else if (hasCompanyPermission) {
-      return this.departmentsService.findDepartmentsByCompany(user.company_id);
-    } else {
+    if (!isSuperAdmin && !hasCompanyPermission) {
       throw new ForbiddenException('You do not have permission to view departments.');
     }
+
+    if (!isSuperAdmin) {
+      return this.departmentsService.findDepartmentsByCompany(user.company_id);
+    }
+
+    return this.departmentsService.findAll();
+    
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Department> {
-    return this.departmentsService.findOne(id);
+  async findOne(@Request() req,@Param('id') id: number): Promise<Department> {
+    const { user } = req;
+    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const hasCompanyPermission = user.permissions.includes('manage_company_departments');
+
+    const foundDepartment = await this.departmentsService.findOne(id);
+
+    if (!isSuperAdmin && !hasCompanyPermission) {
+      throw new ForbiddenException('You do not have permission to view departments.');
+    }
+
+    if (!isSuperAdmin) {
+      if (foundDepartment.company.id !== user.company_id) {
+        throw new ForbiddenException('You can only view departments within your company.');
+      }
+    }
+
+    return foundDepartment;
   }
 
 
- 
+ @Put(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async update(
+    @Request() req,
+    @Param('id') id: number,
+    @Body() updateDepartmentDto: UpdateDepartmentDto,
+  ) : Promise<Department> {
+    const { user } = req;
+    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const hasCompanyPermission = user.permissions.includes('manage_company_departments');
+
+    const departmentToUpdate = await this.departmentsService.findOne(id);
+
+    if (!isSuperAdmin && !hasCompanyPermission) {
+      throw new ForbiddenException('You do not have permission to update departments.');
+    }
+
+    if (!isSuperAdmin) {
+      if (departmentToUpdate.company.id !== user.company_id) {
+        throw new ForbiddenException('You can only update departments within your company.');
+      }
+    }
+
+    return this.departmentsService.update(id, updateDepartmentDto);
+  }
 
   @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
+  async remove(@Request() req,@Param('id') id: number): Promise<void> {
+    const { user } = req;
+    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const hasCompanyPermission = user.permissions.includes('manage_company_departments');
+
+    const departmentToDelete = await this.departmentsService.findOne(id);
+
+    if (!isSuperAdmin && !hasCompanyPermission) {
+      throw new ForbiddenException('You do not have permission to delete departments.');
+    }
+
+    if (!isSuperAdmin) {
+      if (departmentToDelete.company.id !== user.company_id) {
+        throw new ForbiddenException('You can only delete departments within your company.');
+      }
+    }
+
     return this.departmentsService.remove(id);
   }
 }
