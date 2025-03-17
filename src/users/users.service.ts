@@ -49,7 +49,7 @@ export class UsersService {
     if (createUserDto.department_id) {
       department = await this.departmentsRepository.findOne({
         where: { id: createUserDto.department_id },
-        relations: { company: true }, // ✅ Ensure company is loaded
+        relations: { company: true },
       });
   
       if (!department) {
@@ -70,7 +70,7 @@ export class UsersService {
   
       team = await this.teamsRepository.findOne({
         where: { id: createUserDto.team_id },
-        relations: { department: true }, // ✅ Ensure department is loaded
+        relations: { department: true }, 
       });
   
       if (!team) {

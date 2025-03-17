@@ -14,7 +14,7 @@ export class CompaniesController {
   async create(@Request() req, @Body() createCompanyDto: CreateCompanyDto) {
     const { user } = req;
 
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
 
     if (!isSuperAdmin) {
       throw new ForbiddenException('Only Super Admin can create companies.');
@@ -27,7 +27,7 @@ export class CompaniesController {
   async findAll(@Request() req) {
     const { user } = req;
 
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
 
     if (isSuperAdmin) {
       return this.companyService.findAll();
@@ -39,7 +39,7 @@ export class CompaniesController {
   @Get(':id')
   async findOne(@Request() req, @Param('id') id: number) {
     const { user } = req;
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
 
     if (isSuperAdmin) {
       return this.companyService.findOne(id);
@@ -55,7 +55,7 @@ export class CompaniesController {
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: number) {
     const { user } = req;
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
 
     if (!isSuperAdmin) {
       throw new ForbiddenException('Only Super Admin can delete companies.');

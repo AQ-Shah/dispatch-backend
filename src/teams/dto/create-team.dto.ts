@@ -1,12 +1,12 @@
 import { IsString, IsNotEmpty, IsInt } from 'class-validator';
 
-export class CreateDepartmentDto {
+export class CreateTeamDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
   @IsInt()
   @IsNotEmpty()
-  company_id: number;
+  department_id: number;
 
 }

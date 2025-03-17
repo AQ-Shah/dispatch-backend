@@ -1,8 +1,8 @@
-// src/company/dto/create-company.dto.ts
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, isString } from 'class-validator';
 
 export class UpdateDepartmentDto {
- 
+  
+  @IsString()
   @IsNotEmpty()
   name?:string;
 

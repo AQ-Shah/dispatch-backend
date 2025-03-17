@@ -18,7 +18,7 @@ export class UsersController {
   async create(@Request() req, @Body() createUserDto: CreateUserDto) {
     const { user } = req;
 
-    const isSuperAdmin = user.permissions.includes('manage_all_users');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const canCreateCompanyUser = user.permissions.includes('create_company_users');
 
     if (!isSuperAdmin && !canCreateCompanyUser) {
@@ -59,7 +59,7 @@ export class UsersController {
   async findAll(@Request() req): Promise<User[]> {
     const { user } = req;
 
-    const isSuperAdmin = user.permissions.includes('manage_all_users');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const canViewCompanyUsers = user.permissions.includes('view_company_users');
 
     if (isSuperAdmin) {
@@ -75,7 +75,7 @@ export class UsersController {
   async findOne(@Request() req, @Param('id') id: number): Promise<User> {
     const { user } = req;
 
-    const isSuperAdmin = user.permissions.includes('manage_all_users');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const canViewCompanyUsers = user.permissions.includes('view_company_users');
 
     const foundUser = await this.usersService.findOne(id);
@@ -101,7 +101,7 @@ export class UsersController {
   ): Promise<User> {
     const { user } = req;
 
-    const isSuperAdmin = user.permissions.includes('manage_all_users');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const canEditCompanyUsers = user.permissions.includes('edit_company_users');
 
     // Fetch the user by ID
@@ -137,7 +137,7 @@ export class UsersController {
   async remove(@Request() req, @Param('id') id: number): Promise<void> {
     const { user } = req;
 
-    const isSuperAdmin = user.permissions.includes('manage_all_users');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const canDeleteCompanyUsers = user.permissions.includes('delete_company_users');
 
     const userToDelete = await this.usersService.findOne(id);

@@ -14,7 +14,7 @@ export class DepartmentsController {
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
     async create(@Request() req, @Body() CreateDepartmentDto: CreateDepartmentDto) {
       const { user } = req;
-      const isSuperAdmin = user.permissions.includes('manage_all_companies');
+      const isSuperAdmin = user.roles.includes('Super Admin');
       const hasCompanyPermission = user.permissions.includes('manage_company_departments');
 
       if (!isSuperAdmin && !hasCompanyPermission) {
@@ -33,7 +33,7 @@ export class DepartmentsController {
   @Get()
   findAll(@Request() req): Promise<Department[]> {
     const { user } = req;
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const hasCompanyPermission = user.permissions.includes('manage_company_departments');
 
     if (!isSuperAdmin && !hasCompanyPermission) {
@@ -51,7 +51,7 @@ export class DepartmentsController {
   @Get(':id')
   async findOne(@Request() req,@Param('id') id: number): Promise<Department> {
     const { user } = req;
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const hasCompanyPermission = user.permissions.includes('manage_company_departments');
 
     const foundDepartment = await this.departmentsService.findOne(id);
@@ -78,14 +78,14 @@ export class DepartmentsController {
     @Body() updateDepartmentDto: UpdateDepartmentDto,
   ) : Promise<Department> {
     const { user } = req;
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const hasCompanyPermission = user.permissions.includes('manage_company_departments');
-
-    const departmentToUpdate = await this.departmentsService.findOne(id);
 
     if (!isSuperAdmin && !hasCompanyPermission) {
       throw new ForbiddenException('You do not have permission to update departments.');
     }
+
+    const departmentToUpdate = await this.departmentsService.findOne(id);
 
     if (!isSuperAdmin) {
       if (departmentToUpdate.company.id !== user.company_id) {
@@ -93,20 +93,21 @@ export class DepartmentsController {
       }
     }
 
-    return this.departmentsService.update(id, updateDepartmentDto);
+    await this.departmentsService.update(id, updateDepartmentDto);
+    return this.departmentsService.findOne(id);
   }
 
   @Delete(':id')
   async remove(@Request() req,@Param('id') id: number): Promise<void> {
     const { user } = req;
-    const isSuperAdmin = user.permissions.includes('manage_all_companies');
+    const isSuperAdmin = user.roles.includes('Super Admin');
     const hasCompanyPermission = user.permissions.includes('manage_company_departments');
-
-    const departmentToDelete = await this.departmentsService.findOne(id);
 
     if (!isSuperAdmin && !hasCompanyPermission) {
       throw new ForbiddenException('You do not have permission to delete departments.');
     }
+
+    const departmentToDelete = await this.departmentsService.findOne(id);
 
     if (!isSuperAdmin) {
       if (departmentToDelete.company.id !== user.company_id) {

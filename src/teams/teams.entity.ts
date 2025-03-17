@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { User } from '../users/users.entity';
 import { Department } from '../departments/departments.entity';
 
 @Entity('teams')
@@ -7,11 +8,14 @@ export class Team {
   id: number;
 
   @Column()
-  team_name: string;
+  name: string;
 
   @ManyToOne(() => Department, (department) => department.teams, { nullable: false, onDelete: 'CASCADE' }) 
   @JoinColumn({ name: 'department_id' })
   department: Department;
+
+  @OneToMany(() => User, (user) => user.team)
+  users: User[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

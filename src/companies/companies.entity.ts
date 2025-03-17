@@ -1,7 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Carrier } from '../carriers/carriers.entity';
 import { User } from '../users/users.entity';
+import { Team } from '@app/teams/teams.entity';
 import { Department } from '../departments/departments.entity';
+
 
 
 @Entity('companies')
@@ -30,5 +32,8 @@ export class Company {
 
   @OneToMany(() => Department, (department) => department.company)
   departments: Department[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
 
 }

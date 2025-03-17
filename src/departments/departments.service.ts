@@ -28,8 +28,11 @@ export class DepartmentsService {
   }
 
   async findDepartmentsByCompany(companyId: number): Promise<Department[]> {
-        return this.departmentsRepository.find({ where: { id: companyId } });
-      }
+    return this.departmentsRepository.find({
+      where: { company: { id: companyId } },
+      relations: { company: true }, 
+    });
+  }
   
     
   async create(createDepartmentDto: CreateDepartmentDto): Promise<Department> {
