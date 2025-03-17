@@ -1,13 +1,5 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  UseGuards,
-  Request,
-  ForbiddenException,
+  Controller, Get, Post, Body, Param, Delete, UseGuards,Request,ForbiddenException,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
