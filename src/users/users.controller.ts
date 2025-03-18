@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-
+import { Throttle } from '@nestjs/throttler';
 
 
 @Controller('users')
@@ -13,6 +13,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async create(@Request() req, @Body() createUserDto: CreateUserDto) {
@@ -92,6 +93,7 @@ export class UsersController {
     }
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Put(':id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async update(
@@ -119,6 +121,7 @@ export class UsersController {
     }
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Patch(':id/password')
   async changePassword(
     @Request() req,
@@ -133,6 +136,7 @@ export class UsersController {
     return this.usersService.changePassword(id, changePasswordDto);
   }
 
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: number): Promise<void> {
     const { user } = req;
@@ -143,12 +147,12 @@ export class UsersController {
     const userToDelete = await this.usersService.findOne(id);
 
     if (isSuperAdmin) {
-      return this.usersService.remove(id); // Allow Super Admin to delete any user
+      return this.usersService.remove(id); 
     } else if (canDeleteCompanyUsers) {
       if (userToDelete.company.id !== user.company_id) {
         throw new ForbiddenException('You can only delete users from your company.');
       }
-      return this.usersService.remove(id); // Allow only if in the same company
+      return this.usersService.remove(id); 
     } else {
       throw new ForbiddenException('You do not have permission to delete this user.');
     }

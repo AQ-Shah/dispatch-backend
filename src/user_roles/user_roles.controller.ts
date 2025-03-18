@@ -4,6 +4,7 @@ import { UserRole } from './user_roles.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AssignRoleDto } from './dto/assign-role.dto';
 import { RemoveRoleDto } from './dto/remove-role.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('user-roles')
 @UseGuards(JwtAuthGuard) 
@@ -28,6 +29,7 @@ export class UserRolesController {
   }
   
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async assignRole(@Request() req, @Body() assignRoleDto: AssignRoleDto): Promise<UserRole> {
@@ -69,6 +71,7 @@ export class UserRolesController {
   }
   
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete()
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async remove(@Request() req, @Body() removeRoleDto: RemoveRoleDto): Promise<void> {

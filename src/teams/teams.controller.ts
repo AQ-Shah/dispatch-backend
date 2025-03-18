@@ -5,12 +5,14 @@ import { DepartmentsService } from '../departments/departments.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('teams')
 @UseGuards(JwtAuthGuard)
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService, private readonly departmentService: DepartmentsService) {}
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async create(@Request() req, @Body() createTeamDto: CreateTeamDto) {
@@ -74,6 +76,7 @@ export class TeamsController {
     return foundTeam;
   }
 
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Put(':id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async update(@Request() req, @Param('id') id: number, @Body() updateTeamDto: UpdateTeamDto): Promise<Team> {
@@ -98,6 +101,7 @@ export class TeamsController {
 
   }
 
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: number): Promise<void> {
     const { user } = req;

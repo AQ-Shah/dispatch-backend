@@ -25,6 +25,10 @@ import { User } from './users/users.entity';
 import { Department } from './departments/departments.entity';
 import { Company } from './companies/companies.entity'; 
 import { AuthGuard } from './auth/auth.guard';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+
 
 @Module({
   imports: [
@@ -42,6 +46,10 @@ import { AuthGuard } from './auth/auth.guard';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Carrier, User, Department, Company]),
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 20,
+    }]),
     AuthModule,
     CompaniesModule,
     CarriersModule,
@@ -65,6 +73,9 @@ import { AuthGuard } from './auth/auth.guard';
     }),
   ],
   controllers: [AppController],  
-  providers: [AuthGuard],
+  providers: [AuthGuard, {
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard
+  }],
 })
 export class AppModule {}

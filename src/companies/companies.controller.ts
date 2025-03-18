@@ -4,12 +4,14 @@ import {
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'; 
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('company')
 @UseGuards(JwtAuthGuard)
 export class CompaniesController {
   constructor(private readonly companyService: CompaniesService) {}
 
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post()
   async create(@Request() req, @Body() createCompanyDto: CreateCompanyDto) {
     const { user } = req;
@@ -23,6 +25,7 @@ export class CompaniesController {
     return this.companyService.create(createCompanyDto);
   }
 
+  
   @Get()
   async findAll(@Request() req) {
     const { user } = req;
@@ -52,6 +55,7 @@ export class CompaniesController {
     }
   }
 
+  @Throttle({ default: { limit: 1, ttl: 60000 } })
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: number) {
     const { user } = req;

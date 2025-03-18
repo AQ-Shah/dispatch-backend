@@ -4,12 +4,14 @@ import { Department } from './departments.entity';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'; 
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('departments')
 @UseGuards(JwtAuthGuard)
 export class DepartmentsController {
   constructor(private readonly departmentsService: DepartmentsService) {}
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post()
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
     async create(@Request() req, @Body() CreateDepartmentDto: CreateDepartmentDto) {
@@ -69,8 +71,8 @@ export class DepartmentsController {
     return foundDepartment;
   }
 
-
- @Put(':id')
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
+  @Put(':id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async update(
     @Request() req,
@@ -97,6 +99,7 @@ export class DepartmentsController {
     return this.departmentsService.findOne(id);
   }
 
+  @Throttle({ default: { limit: 2, ttl: 60000 } })
   @Delete(':id')
   async remove(@Request() req,@Param('id') id: number): Promise<void> {
     const { user } = req;
