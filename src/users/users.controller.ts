@@ -26,6 +26,12 @@ export class UsersController {
       throw new ForbiddenException('You do not have permission to create users.');
     }
 
+    if (!isSuperAdmin) {
+      if (createUserDto.role_id === 1) {
+        throw new ForbiddenException('Access denied');
+      }
+    }
+
     // If user is not Super Admin, they must provide a company_id and stay within their company
     if (!isSuperAdmin) {
       if (!createUserDto.company_id || createUserDto.company_id !== user.company.id) {
@@ -52,7 +58,6 @@ export class UsersController {
         }
       }
     }
-
     return this.usersService.create(createUserDto);
   }
 

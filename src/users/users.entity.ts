@@ -4,6 +4,7 @@ import { Company } from '../companies/companies.entity';
 import { Team } from '../teams/teams.entity';
 import { Department } from '../departments/departments.entity';
 import { Role } from '../roles/roles.entity';
+import { Permission } from '../permissions/permissions.entity';
 
 @Entity('users')
 export class User {
@@ -16,36 +17,35 @@ export class User {
   @Column({ unique: true })
   email: string;
   
-
   @Column()
   hashed_password: string;
 
-  @Column()
-  designation	: string;
+  @Column({ nullable: true })
+  designation: string; 
 
   @Column()
-  phone	: string;
+  phone: string;
 
   @Column()
-  emergency_phone	: string;
+  emergency_phone: string;
 
   @Column()
-  gender	: string;
+  gender: string;
 
   @Column()
-  dob	: Date;
+  dob: Date;
 
   @Column()
-  join_date	: Date;
+  join_date: Date;
 
   @Column()
-  leaving_date	: Date;
+  leaving_date: Date;
 
   @Column({ default: 'employed' })
   current_status: string;
 
   @Column()
-  photo_path : string;
+  photo_path: string;
 
   @ManyToOne(() => Company, { nullable: true, onDelete: 'SET NULL' }) 
   @JoinColumn({ name: 'company_id' })
@@ -59,7 +59,6 @@ export class User {
   @JoinColumn({ name: 'team_id' })
   team: Team;
   
-  // Fetch roles dynamically from `user_roles` table
   @ManyToMany(() => Role, { eager: true })
   @JoinTable({
     name: 'user_roles',
@@ -68,7 +67,14 @@ export class User {
   })
   roles: Role[];
 
-  // Add One-to-Many relation: One user can create multiple carriers
+  @ManyToMany(() => Permission, { eager: true })
+  @JoinTable({
+    name: 'user_permissions',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
+  })
+  permissions: Permission[];
+
   @OneToMany(() => Carrier, (carrier) => carrier.creator)
   carriers: Carrier[];
 }

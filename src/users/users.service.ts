@@ -5,12 +5,14 @@ import { User } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { DepartmentsService } from '../departments/departments.service';
-import { TeamsService } from '../teams/teams.service';
 import * as bcrypt from 'bcrypt';
 import { Company } from '@app/companies/companies.entity';
 import { Department } from '@app/departments/departments.entity';
 import { Team } from '@app/teams/teams.entity';
+import { UserPermissionsService } from '../user_permissions/user_permissions.service';
+import { UserRolesService } from '../user_roles/user_roles.service'; 
+import { UserRole } from '@app/user_roles/user_roles.entity';
+
 
 @Injectable()
 export class UsersService {
@@ -23,8 +25,8 @@ export class UsersService {
     private departmentsRepository: Repository<Department>,
     @InjectRepository(Team)
     private teamsRepository: Repository<Team>,
-    private departmentsService: DepartmentsService,
-    private teamsService: TeamsService
+    private userPermissionsService: UserPermissionsService,
+    private userRolesService: UserRolesService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -81,10 +83,8 @@ export class UsersService {
         throw new BadRequestException('Invalid team_id: Team does not belong to the provided department.');
       }
     }
-  
-    // Hash password before saving
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-  
+
     // Create the user instance
     const newUser = this.usersRepository.create({
       ...createUserDto,
@@ -94,10 +94,31 @@ export class UsersService {
       ...(team && { team }),
     });
   
-    return this.usersRepository.save(newUser);
+    const savedUser = await this.usersRepository.save(newUser);
+
+    if (createUserDto.role_id) {
+      const user = await this.usersRepository.findOne({ where: { id: savedUser.id } });
+      const role = await this.userRolesService.getRoleById(createUserDto.role_id);
+    
+      if (!user || !role) {
+        throw new BadRequestException('Invalid user or role.');
+      }
+    
+      const userRole = new UserRole();
+      userRole.user_id = user.id;
+      userRole.role_id = role.id;
+    
+      await this.userRolesService.assignRole(userRole); 
+      await this.userPermissionsService.assignDefaultPermissions(savedUser.id, createUserDto.role_id);
+    }
+    
+    return savedUser;
+
   }
   
-  
+  async getUserPermissions(userId: number) {
+    return this.userPermissionsService.getUserPermissions(userId);
+  }
   
 
   async validateDepartment(departmentId: number, companyId: number): Promise<boolean> {

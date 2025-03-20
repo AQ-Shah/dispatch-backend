@@ -4,24 +4,26 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from '../users/users.entity';
 import { Role } from '../roles/roles.entity';
+import { Permission } from '../permissions/permissions.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt'; 
-import { PassportModule } from '@nestjs/passport';
-import { AuthGuard } from './auth.guard';
 import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { UserPermissionsModule } from '../user_permissions/user_permissions.module'; 
+
+
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([User, Role]),
+    UserPermissionsModule, 
+    TypeOrmModule.forFeature([User, Role, Permission]),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'fallback-secret-key',
       signOptions: { expiresIn: '1h' },
     }),
-    
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtAuthGuard, JwtService],  
-  exports: [AuthService, JwtAuthGuard, JwtService], 
+  providers: [AuthService, JwtAuthGuard, JwtService, ],  
+  exports: [AuthService, JwtAuthGuard, JwtService, ], 
 })
 export class AuthModule {}

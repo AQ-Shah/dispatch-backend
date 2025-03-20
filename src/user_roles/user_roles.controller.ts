@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Request, UnauthorizedException, ForbiddenException, BadRequestException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Request, UnauthorizedException, ForbiddenException, BadRequestException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserRolesService } from './user_roles.service';
 import { UserRole } from './user_roles.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';

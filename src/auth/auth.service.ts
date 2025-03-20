@@ -3,9 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/users.entity';
 import { Role } from '../roles/roles.entity';
+import { UserPermission } from '@app/user_permissions/user_permissions.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { UserPermissionsService } from '../user_permissions/user_permissions.service';
+
 
 @Injectable()
 export class AuthService {
@@ -14,7 +17,10 @@ export class AuthService {
     private userRepository: Repository<User>,
     @InjectRepository(Role)
     private roleRepository: Repository<Role>,
+    @InjectRepository(UserPermission)
+    private userPermission: Repository<UserPermission>,
     private jwtService: JwtService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   async validateUser(loginDto: LoginDto): Promise<{ accessToken: string; user: any }> {
@@ -34,9 +40,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    // Extract role names & permissions from the database
+    // Extract role names
     const roles = user.roles.map(role => role.name);
-    const permissions = user.roles.flatMap(role => role.permissions.map(p => p.name));
+    
+    // Fetch direct user permissions
+    const userPermissions = await this.userPermissionsService.getUserPermissions(user.id);
+    const permissions = userPermissions.map(up => up.permission.name);
+    
 
     // Generate JWT token
     const payload = {

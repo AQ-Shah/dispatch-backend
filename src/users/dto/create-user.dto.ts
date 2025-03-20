@@ -17,6 +17,10 @@ export class CreateUserDto {
   designation?: string;
 
   @IsOptional()
+  @IsNumber()
+  role_id?: number;
+
+  @IsOptional()
   @IsString()
   phone?: string;
 

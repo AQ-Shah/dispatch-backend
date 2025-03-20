@@ -17,6 +17,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolePermissionsModule } from './role_permissions/role_permissions.module';
+import { UserPermissionsModule } from './user_permissions/user_permissions.module';
 import { UserRolesModule } from './user_roles/user_roles.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { TeamsModule } from './teams/teams.module';
@@ -64,6 +65,7 @@ import { APP_GUARD } from '@nestjs/core';
     RolesModule,
     PermissionsModule,
     RolePermissionsModule,
+    UserPermissionsModule,
     UserRolesModule,
     DepartmentsModule,
     TeamsModule,
