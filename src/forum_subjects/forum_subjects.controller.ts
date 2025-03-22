@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
-import { ForumService } from './forum.service';
-import { Forum } from './forum.entity';
+import { ForumService } from './forum_subjects.service';
+import { Forum } from './forum_subjects.entity';
 
 @Controller('forum')
 export class ForumController {

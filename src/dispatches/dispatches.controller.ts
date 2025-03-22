@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
-import { DispatchService } from './dispatch.service';
-import { Dispatch } from './dispatch.entity';
+import { DispatchService } from './dispatches.service';
+import { Dispatch } from './dispatches.entity';
 
 @Controller('dispatch')
 export class DispatchController {

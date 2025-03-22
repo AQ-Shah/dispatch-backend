@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('forum_subject')
+@Entity('forum_subjects')
 export class Forum {
   @PrimaryGeneratedColumn()
   id: number;

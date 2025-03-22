@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DispatchService } from './dispatch.service';
-import { DispatchController } from './dispatch.controller';
-import { Dispatch } from './dispatch.entity';
+import { DispatchService } from './dispatches.service';
+import { DispatchController } from './dispatches.controller';
+import { Dispatch } from './dispatches.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Dispatch])],

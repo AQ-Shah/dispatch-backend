@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Forum } from './forum.entity';
+import { Forum } from './forum_subjects.entity';
 
 @Injectable()
 export class ForumService {
