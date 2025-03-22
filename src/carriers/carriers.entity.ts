@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../users/users.entity';
 import { Company } from '../companies/companies.entity';
+import { Team } from '../teams/teams.entity';
+import { Dispatch } from '../dispatches/dispatches.entity';
 
 @Entity('carriers')
 export class Carrier {
@@ -10,6 +12,7 @@ export class Carrier {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   creation_time: Date;
 
+  // 🔹 Relations
   @ManyToOne(() => Company, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
   company: Company;
@@ -18,35 +21,51 @@ export class Carrier {
   @JoinColumn({ name: 'creator_id' })
   creator: User;
 
-  @Column({ nullable: true })
-  sales_team_id: number;
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'owner_id' })
+  owner: User;
 
-  @Column({ nullable: true })
-  dispatch_team_id: number;
+  @ManyToOne(() => Team, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'sales_team_id' })
+  sales_team: Team;
 
-  @Column({ type: 'tinyint', default: 0 })
-  sale_active: number;
+  @ManyToOne(() => Team, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'dispatch_team_id' })
+  dispatch_team: Team;
 
-  @Column({ nullable: true })
-  sale_activation_dispatch_id: number;
+  @ManyToOne(() => Dispatch, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'sale_matured_dispatch_id' })
+  sale_matured_dispatch: Dispatch;
 
-  @Column({ type: 'datetime', nullable: true })
-  sale_activation_date: Date;
-
-  @Column({ type: 'int', default: 1 })
-  status: number;
+  // 🔹 Status & Tracking
+  @Column({
+    type: 'enum',
+    enum: ['Engaged', 'Paused', 'Discontinued', 'Flagged'],
+    default: 'Engaged',
+  })
+  status: string;
 
   @Column({ type: 'text', nullable: true })
   status_change_reason: string;
 
+  // 🔹 Info
   @Column({ nullable: true })
-  name: string;
+  c_name: string;
 
   @Column({ nullable: true })
-  email: string;
+  c_email: string;
 
   @Column({ nullable: true })
-  address: string;
+  c_address_1: string;
+
+  @Column({ nullable: true })
+  c_address_2: string;
+
+  @Column({ nullable: true })
+  c_state: string;
+
+  @Column({ nullable: true })
+  c_zipcode: string;
 
   @Column({ nullable: true })
   dot_number: string;
@@ -57,12 +76,6 @@ export class Carrier {
   @Column({ nullable: true })
   dba: string;
 
-  @Column({ nullable: true })
-  business_address: string;
-
-  @Column({ nullable: true })
-  owner_name: string;
-
-  @Column({ nullable: true })
-  business_number: string;
+  @Column({ type: 'boolean', default: false })
+  sale_matured: boolean;
 }

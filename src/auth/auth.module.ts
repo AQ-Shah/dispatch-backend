@@ -19,7 +19,7 @@ import { UserPermissionsModule } from '../user_permissions/user_permissions.modu
     TypeOrmModule.forFeature([User, Role, Permission]),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'fallback-secret-key',
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN || '12h' },
     }),
   ],
   controllers: [AuthController],
