@@ -6,6 +6,7 @@ test/
 
 # Ignore environment files
 .env
+hash.ts
 
 # Ignore editor configurations
 .vscode/
