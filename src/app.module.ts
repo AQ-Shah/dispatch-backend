@@ -29,6 +29,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 
 @Module({
@@ -73,6 +74,7 @@ import { APP_GUARD } from '@nestjs/core';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
+    DashboardModule,
   ],
   controllers: [AppController],  
   providers: [AuthGuard, {

@@ -61,6 +61,8 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+
+  //************** ALL THE GET DATA APIs BELOW *****************************
   @Get()
   async findAll(@Request() req): Promise<User[]> {
     const { user } = req;
@@ -76,6 +78,7 @@ export class UsersController {
       throw new ForbiddenException('You do not have permission to view users.');
     }
   }
+
 
   @Get(':id')
   async findOne(@Request() req, @Param('id') id: number): Promise<User> {
@@ -97,6 +100,11 @@ export class UsersController {
       throw new ForbiddenException('You do not have permission to view this user.');
     }
   }
+
+
+
+
+  //************** ALL THE GET DATA APIs ENDs *****************************
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Put(':id')
