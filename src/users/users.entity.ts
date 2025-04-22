@@ -47,10 +47,14 @@ export class User {
   @Column()
   photo_path: string;
 
-  @ManyToOne(() => Company, { nullable: true, onDelete: 'SET NULL' }) 
-  @JoinColumn({ name: 'company_id' })
+  @ManyToOne(() => Company, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'dispatch_c_id' }) 
   company: Company;
-
+  
+  @ManyToOne(() => Carrier, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'carrier_id' }) 
+  carrier: Carrier;
+  
   @ManyToOne(() => Department, { nullable: true, onDelete: 'SET NULL' }) 
   @JoinColumn({ name: 'department_id' })
   department: Department;

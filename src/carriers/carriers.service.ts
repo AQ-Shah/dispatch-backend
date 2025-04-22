@@ -68,9 +68,9 @@ export class CarriersService {
   
 
   async create(dto: CreateCarrierDto, creatorId: number): Promise<Carrier> {
-    const company = await this.companiesRepository.findOne({ where: { id: dto.company_id } });
+    const company = await this.companiesRepository.findOne({ where: { id: dto.dispatch_c_id } });
     if (!company) {
-      throw new BadRequestException('Invalid company_id');
+      throw new BadRequestException('Invalid dispatch_c_id');
     }
 
     const creator = await this.usersRepository.findOne({ where: { id: creatorId } });

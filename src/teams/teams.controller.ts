@@ -91,7 +91,7 @@ export class TeamsController {
     const team = await this.teamsService.findOne(id);
     
     if (!isSuperAdmin) {
-      if (team.department.company.id !== user.company_id) {
+      if (team.department.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only update teams within your company.');
       }
     }
@@ -116,7 +116,7 @@ export class TeamsController {
     const teamToDelete = await this.teamsService.findOne(id);
 
     if (!isSuperAdmin) {
-      if (teamToDelete.department.company.id !== user.company_id) {
+      if (teamToDelete.department.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only delete teams within your company.');
       }
     }

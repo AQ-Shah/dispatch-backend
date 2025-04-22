@@ -35,7 +35,7 @@ export class CompaniesController {
     if (isSuperAdmin) {
       return this.companyService.findAll();
     } else {
-      return this.companyService.findByUserCompany(user.company_id);
+      return this.companyService.findByUserCompany(user.dispatch_c_id);
     }
   }
 
@@ -48,7 +48,7 @@ export class CompaniesController {
       return this.companyService.findOne(id);
     } else {
       const company = await this.companyService.findOne(id);
-      if (company.id !== user.company_id) {
+      if (company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only view your own company.');
       }
       return company;

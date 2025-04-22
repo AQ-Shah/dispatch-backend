@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsOptional, MinLength, IsEnum, IsNumber } from 'class-validator';
+import { IsString, IsEmail, IsOptional, MinLength, IsEnum, IsNumber, IsInt } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -33,8 +33,12 @@ export class CreateUserDto {
   gender?: string;
 
   @IsOptional()
-  @IsNumber()
-  company_id?: number; 
+  @IsInt()
+  dispatch_c_id?: number;
+  
+  @IsOptional()
+  @IsInt()
+  carrier_id?: number;
   
   @IsOptional()
   @IsNumber()

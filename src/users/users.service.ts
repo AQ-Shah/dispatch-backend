@@ -37,12 +37,12 @@ export class UsersService {
       throw new BadRequestException('User with this email already exists');
     }
   
-    // Fetch the Company entity if `company_id` is provided
+    // Fetch the Company entity if `dispatch_c_id` is provided
     let company: Company | null = null;
-    if (createUserDto.company_id) {
-      company = await this.companiesRepository.findOne({ where: { id: createUserDto.company_id } });
+    if (createUserDto.dispatch_c_id) {
+      company = await this.companiesRepository.findOne({ where: { id: createUserDto.dispatch_c_id } });
       if (!company) {
-        throw new BadRequestException('Invalid company_id: Company does not exist');
+        throw new BadRequestException('Invalid dispatch_c_id: Company does not exist');
       }
     }
   
@@ -58,7 +58,7 @@ export class UsersService {
         throw new BadRequestException('Invalid department_id: Department does not exist.');
       }
   
-      if (department.company.id !== createUserDto.company_id) {
+      if (department.company.id !== createUserDto.dispatch_c_id) {
         throw new BadRequestException('Invalid department_id: Department does not belong to the provided company.');
       }
     }

@@ -71,11 +71,11 @@ export class UserPermissionsService {
     return this.userPermissionsRepo.save(userPermissions);
   }
 
-  async getUserCompanyId(userId: number): Promise<{ company_id: number } | null> {
+  async getUserCompanyId(userId: number): Promise<{ dispatch_c_id: number } | null> {
     const result = await this.usersRepo
       .createQueryBuilder('user')
       .where('user.id = :userId', { userId })
-      .select(['user.company_id'])
+      .select(['user.dispatch_c_id'])
       .getRawOne();
   
     return result || null;

@@ -44,7 +44,7 @@ export class CarriersController {
       return this.carriersService.create(dto, user.id);
     }
   
-    if (dto.company_id !== user.company_id) {
+    if (dto.dispatch_c_id !== user.dispatch_c_id) {
       throw new ForbiddenException('You can only create carriers for your own company.');
     }
   
@@ -54,7 +54,7 @@ export class CarriersController {
       }
   
       const dispatchTeam = await this.teamsService.findOne(dto.dispatch_team_id);
-      if (!dispatchTeam || dispatchTeam.department.company.id !== user.company_id) {
+      if (!dispatchTeam || dispatchTeam.department.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('Dispatch team must belong to your company.');
       }
     }
@@ -65,7 +65,7 @@ export class CarriersController {
     const canAssignSelf = user.permissions.includes('create_carriers_for_self');
   
     const creator = await this.usersService.findOne(dto.creator_id);
-    if (!creator || creator.company?.id !== user.company_id) {
+    if (!creator || creator.company?.id !== user.dispatch_c_id) {
       throw new ForbiddenException('Creator must be in the same company.');
     }
   
@@ -103,7 +103,7 @@ export class CarriersController {
     const isSelf = carrier.creator?.id === user.id;
   
     if (
-      (canEditAll && carrier.company.id === user.company_id) ||
+      (canEditAll && carrier.company.id === user.dispatch_c_id) ||
       (canEditTeam && sameTeam) ||
       (canEditSelf && isSelf)
     ) {
@@ -133,7 +133,7 @@ export class CarriersController {
     const isSelf = carrier.creator?.id === user.id;
   
     if (
-      (canEditAll && carrier.company.id === user.company_id) ||
+      (canEditAll && carrier.company.id === user.dispatch_c_id) ||
       (canEditTeam && sameTeam) ||
       (canEditSelf && isSelf)
     ) {
@@ -182,13 +182,13 @@ export class CarriersController {
     const hasViewTeam = user.permissions.includes('view_only_team_carriers');
     const hasViewSelf = user.permissions.includes('view_only_self_carriers');
   
-    if (hasViewAll && carrier.company.id === user.company_id) {
+    if (hasViewAll && carrier.company.id === user.dispatch_c_id) {
       return carrier;
     }
   
     if (
       hasViewTeam &&
-      carrier.company.id === user.company_id &&
+      carrier.company.id === user.dispatch_c_id &&
       (
         carrier.sales_team?.id === user.team_id ||
         carrier.dispatch_team?.id === user.team_id
@@ -199,7 +199,7 @@ export class CarriersController {
   
     if (
       hasViewSelf &&
-      carrier.company.id === user.company_id &&
+      carrier.company.id === user.dispatch_c_id &&
       (
         carrier.creator?.id === user.id ||
         carrier.owner?.id === user.id
@@ -226,15 +226,15 @@ export class CarriersController {
     const hasViewSelf = user.permissions.includes('view_only_self_carriers');
   
     if (hasViewAll) {
-      return this.carriersService.findByCompany(user.company_id);
+      return this.carriersService.findByCompany(user.dispatch_c_id);
     }
   
     if (hasViewTeam) {
-      return this.carriersService.findByTeam(user.company_id, user.team_id);
+      return this.carriersService.findByTeam(user.dispatch_c_id, user.team_id);
     }
   
     if (hasViewSelf) {
-      return this.carriersService.findBySelf(user.company_id, user.id);
+      return this.carriersService.findBySelf(user.dispatch_c_id, user.id);
     }
   
     throw new ForbiddenException('You do not have permission to view carriers.');

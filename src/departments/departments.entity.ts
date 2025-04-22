@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Company } from '../companies/companies.entity';
+import { Carrier } from '../carriers/carriers.entity';
 import { Team } from '../teams/teams.entity';
 import { User } from '../users/users.entity';
 
@@ -12,8 +13,12 @@ export class Department {
   name: string;
 
   @ManyToOne(() => Company, { nullable: false, onDelete: 'CASCADE' }) 
-  @JoinColumn({ name: 'company_id' })
+  @JoinColumn({ name: 'dispatch_c_id' })
   company: Company;
+
+  @ManyToOne(() => Carrier, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'carrier_id' }) 
+  carrier: Carrier;
 
   @OneToMany(() => Team, (team) => team.department)
   teams: Team[];

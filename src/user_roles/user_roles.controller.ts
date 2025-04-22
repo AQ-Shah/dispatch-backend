@@ -25,7 +25,7 @@ export class UserRolesController {
       return this.userRolesService.findAll();
     }
   
-    return this.userRolesService.findAllByCompany(user.company_id);
+    return this.userRolesService.findAllByCompany(user.dispatch_c_id);
   }
   
 
@@ -47,7 +47,7 @@ export class UserRolesController {
   
     if (!isSuperAdmin) {
       const targetUser = await this.userRolesService.getUserWithCompany(assignRoleDto.user_id);
-      if (!targetUser || targetUser.company_id !== user.company_id) {
+      if (!targetUser || targetUser.dispatch_c_id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only modify roles for users within your company.');
       }
     }
@@ -89,7 +89,7 @@ export class UserRolesController {
 
     if (!isSuperAdmin) {
       const targetUser = await this.userRolesService.getUserWithCompany(removeRoleDto.user_id);
-      if (!targetUser || targetUser.company_id !== user.company_id) {
+      if (!targetUser || targetUser.dispatch_c_id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only modify roles for users within your company.');
       }
     }

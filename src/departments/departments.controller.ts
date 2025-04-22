@@ -24,7 +24,7 @@ export class DepartmentsController {
       }
 
       if (!isSuperAdmin) {
-        if (!CreateDepartmentDto.company_id || CreateDepartmentDto.company_id !== user.company_id) {
+        if (!CreateDepartmentDto.dispatch_c_id || CreateDepartmentDto.dispatch_c_id !== user.dispatch_c_id) {
           throw new ForbiddenException('You can only create departments within your company.');
         }
       }
@@ -43,7 +43,7 @@ export class DepartmentsController {
     }
 
     if (!isSuperAdmin) {
-      return this.departmentsService.findDepartmentsByCompany(user.company_id);
+      return this.departmentsService.findDepartmentsByCompany(user.dispatch_c_id);
     }
 
     return this.departmentsService.findAll();
@@ -63,7 +63,7 @@ export class DepartmentsController {
     }
 
     if (!isSuperAdmin) {
-      if (foundDepartment.company.id !== user.company_id) {
+      if (foundDepartment.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only view departments within your company.');
       }
     }
@@ -90,7 +90,7 @@ export class DepartmentsController {
     const departmentToUpdate = await this.departmentsService.findOne(id);
 
     if (!isSuperAdmin) {
-      if (departmentToUpdate.company.id !== user.company_id) {
+      if (departmentToUpdate.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only update departments within your company.');
       }
     }
@@ -113,7 +113,7 @@ export class DepartmentsController {
     const departmentToDelete = await this.departmentsService.findOne(id);
 
     if (!isSuperAdmin) {
-      if (departmentToDelete.company.id !== user.company_id) {
+      if (departmentToDelete.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only delete departments within your company.');
       }
     }

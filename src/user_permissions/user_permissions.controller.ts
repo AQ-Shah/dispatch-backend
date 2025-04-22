@@ -25,7 +25,7 @@ export class UserPermissionsController {
 
     if (!isSuperAdmin) {
       const targetUser = await this.userPermissionsService.getUserCompanyId(userId);
-      if (!targetUser || targetUser.company_id !== user.company_id) {
+      if (!targetUser || targetUser.dispatch_c_id !== user.dispatch_c_id) {
         throw new ForbiddenException('Access Denied.');
       }
     }
@@ -50,7 +50,7 @@ export class UserPermissionsController {
 
     if (!isSuperAdmin) {
       const targetUser = await this.userPermissionsService.getUserCompanyId(userId);
-      if (!targetUser || targetUser.company_id !== user.company_id) {
+      if (!targetUser || targetUser.dispatch_c_id !== user.dispatch_c_id) {
         throw new ForbiddenException('Access Denied.');
       }
     }

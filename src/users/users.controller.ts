@@ -32,9 +32,9 @@ export class UsersController {
       }
     }
 
-    // If user is not Super Admin, they must provide a company_id and stay within their company
+    // If user is not Super Admin, they must provide a dispatch_c_id and stay within their company
     if (!isSuperAdmin) {
-      if (!createUserDto.company_id || createUserDto.company_id !== user.company.id) {
+      if (!createUserDto.dispatch_c_id || createUserDto.dispatch_c_id !== user.company.id) {
         throw new ForbiddenException('You can only create users within your company.');
       }
     }
@@ -73,7 +73,7 @@ export class UsersController {
     if (isSuperAdmin) {
       return this.usersService.findAll(); // Get all users
     } else if (canViewCompanyUsers) {
-      return this.usersService.findUsersByCompany(user.company_id); // Get users of the same company
+      return this.usersService.findUsersByCompany(user.dispatch_c_id); // Get users of the same company
     } else {
       throw new ForbiddenException('You do not have permission to view users.');
     }
@@ -92,7 +92,7 @@ export class UsersController {
     if (isSuperAdmin) {
       return foundUser; // Super Admin can view any user
     } else if (canViewCompanyUsers) {
-      if (foundUser.company.id !== user.company_id) {
+      if (foundUser.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only view users from your company.');
       }
       return foundUser; // Return user only if from same company
@@ -125,7 +125,7 @@ export class UsersController {
     if (isSuperAdmin) {
       return this.usersService.update(id, updateUserDto); // Super Admin can update any user
     } else if (canEditCompanyUsers) {
-      if (userToUpdate.company.id !== user.company_id) {
+      if (userToUpdate.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only update users from your company.');
       }
       return this.usersService.update(id, updateUserDto); // Allow only if in the same company
@@ -162,7 +162,7 @@ export class UsersController {
     if (isSuperAdmin) {
       return this.usersService.remove(id); 
     } else if (canDeleteCompanyUsers) {
-      if (userToDelete.company.id !== user.company_id) {
+      if (userToDelete.company.id !== user.dispatch_c_id) {
         throw new ForbiddenException('You can only delete users from your company.');
       }
       return this.usersService.remove(id); 

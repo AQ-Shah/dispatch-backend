@@ -22,12 +22,12 @@ export class UserRolesService {
     return this.userRolesRepository.find();
   }
 
-  async getUserWithCompany(userId: number): Promise<{ id: number; company_id: number } | null> {
+  async getUserWithCompany(userId: number): Promise<{ id: number; dispatch_c_id: number } | null> {
     const result = await this.userRolesRepository
       .createQueryBuilder('user_role')
       .innerJoinAndSelect('user_role.user', 'user')
       .where('user_role.user_id = :userId', { userId })
-      .select(['user.id', 'user.company_id']) 
+      .select(['user.id', 'user.dispatch_c_id']) 
       .getRawOne();
     return result || null;
   }
@@ -37,7 +37,7 @@ export class UserRolesService {
       .createQueryBuilder('userRole')
       .innerJoinAndSelect('userRole.user', 'user')
       .innerJoinAndSelect('userRole.role', 'role')
-      .where('user.company_id = :companyId', { companyId })
+      .where('user.dispatch_c_id = :companyId', { companyId })
       .getMany();
   }
   

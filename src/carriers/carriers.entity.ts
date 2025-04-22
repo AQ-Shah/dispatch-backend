@@ -14,7 +14,7 @@ export class Carrier {
 
   // 🔹 Relations
   @ManyToOne(() => Company, { nullable: false, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'company_id' })
+  @JoinColumn({ name: 'dispatch_c_id' })
   company: Company;
 
   @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE', eager: true })

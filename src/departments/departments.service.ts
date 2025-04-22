@@ -36,10 +36,10 @@ export class DepartmentsService {
   
     
   async create(createDepartmentDto: CreateDepartmentDto): Promise<Department> {
-    const company = await this.companiesRepository.findOne({ where: { id: createDepartmentDto.company_id } });
+    const company = await this.companiesRepository.findOne({ where: { id: createDepartmentDto.dispatch_c_id } });
 
     if (!company) {
-      throw new BadRequestException('Invalid company_id: Company does not exist');
+      throw new BadRequestException('Invalid dispatch_c_id: Company does not exist');
     }
     const newDepartment = this.departmentsRepository.create({
       name: createDepartmentDto.name, 

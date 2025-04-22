@@ -7,6 +7,6 @@ export class CreateDepartmentDto {
 
   @IsInt()
   @IsNotEmpty()
-  company_id: number;
+  dispatch_c_id: number;
 
 }

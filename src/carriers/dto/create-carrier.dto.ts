@@ -2,7 +2,7 @@ import { IsOptional, IsString, IsNumber, IsEnum, IsEmail } from 'class-validator
 
 export class CreateCarrierDto {
   @IsNumber()
-  company_id: number;
+  dispatch_c_id: number;
 
   @IsNumber()
   creator_id: number;
