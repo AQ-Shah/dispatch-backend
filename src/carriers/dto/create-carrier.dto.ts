@@ -1,55 +1,23 @@
-import { IsOptional, IsString, IsNumber, IsEnum, IsEmail } from 'class-validator';
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsNotEmpty,
+  IsBoolean,
+  IsInt,
+} from 'class-validator';
 
 export class CreateCarrierDto {
-  @IsNumber()
-  dispatch_c_id: number;
-
-  @IsNumber()
-  creator_id: number;
-
-  @IsOptional()
-  @IsNumber()
-  sales_team_id?: number;
-
-  @IsOptional()
-  @IsNumber()
-  dispatch_team_id?: number;
-
-  @IsOptional()
-  @IsEnum(['Engaged', 'Paused', 'Discontinued', 'Flagged'])
-  status?: string;
-
-  @IsOptional()
   @IsString()
-  status_change_reason?: string;
+  @IsNotEmpty()
+  company_name: string;
 
-  @IsOptional()
-  @IsString()
-  c_name?: string;
-
-  @IsOptional()
   @IsEmail()
-  c_email?: string;
+  email: string;
 
   @IsOptional()
   @IsString()
-  c_address_1?: string;
-
-  @IsOptional()
-  @IsString()
-  c_address_2?: string;
-
-  @IsOptional()
-  @IsString()
-  c_state?: string;
-
-  @IsOptional()
-  @IsString()
-  c_zipcode?: string;
-
-  @IsOptional()
-  @IsString()
-  dot_number?: string;
+  phone?: string;
 
   @IsOptional()
   @IsString()
@@ -57,13 +25,29 @@ export class CreateCarrierDto {
 
   @IsOptional()
   @IsString()
+  dot_number?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  state?: string;
+
+  @IsOptional()
+  @IsString()
+  zip_code?: string;
+
+  @IsOptional()
+  @IsString()
   dba?: string;
 
   @IsOptional()
-  @IsNumber()
-  owner_id?: number;
+  @IsBoolean()
+  active?: boolean;
 
   @IsOptional()
-  @IsNumber()
-  sale_matured_dispatch_id?: number;
+  @IsInt()
+  owner_user_id?: number;
 }

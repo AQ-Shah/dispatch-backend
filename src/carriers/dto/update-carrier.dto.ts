@@ -1,15 +1,4 @@
-import { IsEnum, IsOptional, IsString, IsNumber } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateCarrierDto } from './create-carrier.dto';
 
-export class UpdateCarrierDto {
-  @IsOptional()
-  @IsEnum(['Engaged', 'Paused', 'Discontinued', 'Flagged'])
-  status?: string;
-
-  @IsOptional()
-  @IsNumber()
-  dispatch_team_id?: number;
-
-  @IsOptional()
-  @IsString()
-  status_change_reason?: string;
-}
+export class UpdateCarrierDto extends PartialType(CreateCarrierDto) {}

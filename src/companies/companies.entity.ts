@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Carrier } from '../carriers/carriers.entity';
 import { User } from '../users/users.entity';
-import { Team } from '@app/teams/teams.entity';
 import { Department } from '../departments/departments.entity';
 
 
@@ -22,10 +20,6 @@ export class Company {
 
   @Column({ nullable: true })
   phone: string;
-
-
-  @OneToMany(() => Carrier, (carrier) => carrier.company)
-  carriers: Carrier[];
 
   @OneToMany(() => User, (user) => user.company)
   users: User[];

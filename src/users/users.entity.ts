@@ -79,6 +79,7 @@ export class User {
   })
   permissions: Permission[];
 
-  @OneToMany(() => Carrier, (carrier) => carrier.creator)
+  @OneToMany(() => Carrier, (carrier) => carrier.owner)
   carriers: Carrier[];
+  
 }

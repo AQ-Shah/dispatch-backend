@@ -7,7 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
 import { CarriersModule } from './carriers/carriers.module';
 import { UsersModule } from './users/users.module';
+import { CarrierDispatchLinksModule } from './carrier_dispatch_links/carrier_dispatch_links.module';
 import { TrucksModule } from './trucks/trucks.module';
+import { TruckDispatchersModule } from './truck_dispatchers/truck_dispatchers.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { DispatchModule } from './dispatches/dispatches.module';
 import { FilesModule } from './files/files.module';
@@ -56,7 +58,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
     CompaniesModule,
     CarriersModule,
     UsersModule,
+    CarrierDispatchLinksModule,
     TrucksModule,
+    TruckDispatchersModule,
     InvoicesModule,
     DispatchModule,
     FilesModule,

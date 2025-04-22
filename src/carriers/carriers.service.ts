@@ -2,10 +2,9 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Carrier } from './carriers.entity';
-import { Company } from '../companies/companies.entity';
-import { User } from '../users/users.entity';
 import { CreateCarrierDto } from './dto/create-carrier.dto';
 import { UpdateCarrierDto } from './dto/update-carrier.dto';
+import { User } from '../users/users.entity';
 
 @Injectable()
 export class CarriersService {
@@ -13,75 +12,40 @@ export class CarriersService {
     @InjectRepository(Carrier)
     private carriersRepository: Repository<Carrier>,
 
-    @InjectRepository(Company)
-    private companiesRepository: Repository<Company>,
-
     @InjectRepository(User)
-    private usersRepository: Repository<User>
+    private usersRepository: Repository<User>,
   ) {}
 
   async findOne(id: number): Promise<Carrier> {
     const carrier = await this.carriersRepository.findOne({
       where: { id },
-      relations: ['company', 'creator', 'owner', 'sales_team', 'dispatch_team', 'sale_matured_dispatch']
+      relations: ['owner', 'trucks', 'dispatch_links'],
     });
 
-    if (!carrier) {
-      throw new NotFoundException(`Carrier with ID ${id} not found`);
-    }
-
+    if (!carrier) throw new NotFoundException(`Carrier with ID ${id} not found`);
     return carrier;
   }
 
   async findAll(): Promise<Carrier[]> {
     return this.carriersRepository.find({
-      relations: ['company', 'creator', 'owner', 'sales_team', 'dispatch_team', 'sale_matured_dispatch']
+      relations: ['owner', 'trucks', 'dispatch_links'],
     });
   }
 
-  async findByCompany(companyId: number): Promise<Carrier[]> {
-    return this.carriersRepository.find({
-      where: { company: { id: companyId } },
-      relations: ['company', 'creator', 'owner', 'sales_team', 'dispatch_team', 'sale_matured_dispatch']
-    });
-  }
-
-  async findByTeam(companyId: number, teamId: number): Promise<Carrier[]> {
-    return this.carriersRepository.find({
-      where: [
-        { company: { id: companyId }, sales_team: { id: teamId } },
-        { company: { id: companyId }, dispatch_team: { id: teamId } },
-      ],
-      relations: ['company', 'sales_team', 'dispatch_team'],
-    });
-  }
-
-  async findBySelf(companyId: number, userId: number): Promise<Carrier[]> {
-    return this.carriersRepository.find({
-      where: [
-        { company: { id: companyId }, creator: { id: userId } },
-        { company: { id: companyId }, owner: { id: userId } },
-      ],
-      relations: ['company', 'creator', 'owner'],
-    });
-  }
-  
-
-  async create(dto: CreateCarrierDto, creatorId: number): Promise<Carrier> {
-    const company = await this.companiesRepository.findOne({ where: { id: dto.dispatch_c_id } });
-    if (!company) {
-      throw new BadRequestException('Invalid dispatch_c_id');
+  async create(dto: CreateCarrierDto, ownerId: number): Promise<Carrier> {
+    const owner = await this.usersRepository.findOne({ where: { id: ownerId } });
+    if (!owner) {
+      throw new BadRequestException('Invalid owner ID');
     }
 
-    const creator = await this.usersRepository.findOne({ where: { id: creatorId } });
-    if (!creator) {
-      throw new BadRequestException('Invalid creator ID');
+    const existing = await this.carriersRepository.findOne({ where: { email: dto.email } });
+    if (existing) {
+      throw new BadRequestException('A carrier with this email already exists');
     }
 
     const newCarrier = this.carriersRepository.create({
       ...dto,
-      company,
-      creator,
+      owner,
     });
 
     return this.carriersRepository.save(newCarrier);
@@ -89,7 +53,6 @@ export class CarriersService {
 
   async update(id: number, dto: UpdateCarrierDto): Promise<Carrier> {
     const existingCarrier = await this.findOne(id);
-
     if (!existingCarrier) {
       throw new NotFoundException(`Carrier with ID ${id} not found`);
     }
@@ -100,9 +63,6 @@ export class CarriersService {
 
   async remove(id: number): Promise<void> {
     const carrier = await this.findOne(id);
-    if (!carrier) {
-      throw new NotFoundException(`Carrier with ID ${id} not found`);
-    }
     await this.carriersRepository.remove(carrier);
   }
 }
