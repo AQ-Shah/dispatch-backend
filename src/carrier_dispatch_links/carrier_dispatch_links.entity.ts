@@ -58,4 +58,7 @@ export class CarrierDispatchLink {
 
   @Column({ type: 'boolean', default: false })
   sale_matured: boolean;
+
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 5.00 })
+  percentage_cut: number;
 }
