@@ -10,12 +10,14 @@ import { Company } from '../companies/companies.entity';
 import { User } from '../users/users.entity';
 import { Team } from '../teams/teams.entity';
 import { Dispatch } from '../dispatches/dispatches.entity';
+import { Carrier } from '../carriers/carriers.entity';
 
 @Entity('carrier_dispatch_links')
 export class CarrierDispatchLink {
   @PrimaryGeneratedColumn()
   id: number;
 
+  
   @CreateDateColumn()
   created_at: Date;
 
@@ -23,8 +25,8 @@ export class CarrierDispatchLink {
   @JoinColumn({ name: 'dispatch_c_id' })
   dispatchCompany: Company;
 
-  @Column()
-  carrier_id: number;
+  @ManyToOne(() => Carrier, (carrier) => carrier.dispatch_links)
+  carrier: Carrier;
 
   @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'creator_id' })

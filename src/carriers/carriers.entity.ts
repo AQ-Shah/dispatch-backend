@@ -56,6 +56,6 @@ export class Carrier {
   @OneToMany(() => Truck, (truck) => truck.carrier)
   trucks: Truck[];
 
-  @OneToMany(() => CarrierDispatchLink, (link) => link.carrier_id)
+  @OneToMany(() => CarrierDispatchLink, (link) => link.carrier)
   dispatch_links: CarrierDispatchLink[];
 }

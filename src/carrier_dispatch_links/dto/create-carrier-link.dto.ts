@@ -11,9 +11,6 @@ export class CreateCarrierDispatchLinkDto {
   @IsInt()
   dispatch_c_id: number;
 
-  @IsInt()
-  carrier_id: number;
-
   @IsOptional()
   @IsInt()
   creator_id?: number;

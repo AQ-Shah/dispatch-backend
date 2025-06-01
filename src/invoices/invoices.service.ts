@@ -63,7 +63,7 @@ export class InvoicesService {
     // Get percentage cut from carrier_dispatch_link
     const link = await this.linkRepo.findOne({
       where: {
-        carrier_id: dto.carrier_id,
+        carrier: { id: dto.carrier_id },
         dispatchCompany: { id: dto.company_id },
       },
     });
