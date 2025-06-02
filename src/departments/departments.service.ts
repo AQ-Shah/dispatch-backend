@@ -5,6 +5,8 @@ import { Department } from './departments.entity';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { Company } from '@app/companies/companies.entity';
+import { Carrier } from '@app/carriers/carriers.entity';
+import { User } from '@app/users/users.entity';
 
 @Injectable()
 export class DepartmentsService {
@@ -35,19 +37,25 @@ export class DepartmentsService {
   }
   
     
-  async create(createDepartmentDto: CreateDepartmentDto): Promise<Department> {
-    const company = await this.companiesRepository.findOne({ where: { id: createDepartmentDto.dispatch_c_id } });
+async create(dto: CreateDepartmentDto, user: User): Promise<Department> {
+  const department = new Department();
+  department.name = dto.name;
 
-    if (!company) {
-      throw new BadRequestException('Invalid dispatch_c_id: Company does not exist');
-    }
-    const newDepartment = this.departmentsRepository.create({
-      name: createDepartmentDto.name, 
-      company: company, 
-    });
-
-    return this.departmentsRepository.save(newDepartment);
+  if (dto.dispatch_c_id) {
+    department.company = { id: dto.dispatch_c_id } as Company;
+  } else if (dto.carrier_id) {
+    department.carrier = { id: dto.carrier_id } as Carrier;
+  } else if (user.company?.id) {
+    department.company = { id: user.company.id } as Company;
+  } else if (user.carrier?.id) {
+    department.carrier = { id: user.carrier.id } as Carrier;
+  } else {
+    throw new BadRequestException('No valid dispatch or carrier ID found to associate.');
   }
+
+  return this.departmentsRepository.save(department);
+}
+
 
 
   async update (id:number, updateDepartmentDto: UpdateDepartmentDto): Promise<Department> {

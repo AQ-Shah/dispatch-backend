@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsInt } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt } from 'class-validator';
 
 export class CreateDepartmentDto {
   @IsString()
@@ -6,7 +6,11 @@ export class CreateDepartmentDto {
   name: string;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   dispatch_c_id: number;
+
+  @IsInt()
+  @IsOptional()
+  carrier_id: number;
 
 }

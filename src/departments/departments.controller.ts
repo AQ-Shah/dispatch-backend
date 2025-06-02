@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param,Request,UsePipes, ValidationPipe,  UseGuards, ForbiddenException, Put, Req} from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param,Request,UsePipes, ValidationPipe,  UseGuards, ForbiddenException, BadRequestException, Put, Req} from '@nestjs/common';
 import { DepartmentsService } from './departments.service';
 import { Department } from './departments.entity';
 import { CreateDepartmentDto } from './dto/create-department.dto';
@@ -24,12 +24,20 @@ export class DepartmentsController {
       }
 
       if (!isSuperAdmin) {
-        if (!CreateDepartmentDto.dispatch_c_id || CreateDepartmentDto.dispatch_c_id !== user.dispatch_c_id) {
-          throw new ForbiddenException('You can only create departments within your company.');
-        }
+        if (CreateDepartmentDto.dispatch_c_id) {
+          if (CreateDepartmentDto.dispatch_c_id !== user.dispatch_c_id) {
+            throw new ForbiddenException('You can only create departments within your dispatch company.');
+          }
+        } else if (CreateDepartmentDto.carrier_id) {
+          if (CreateDepartmentDto.carrier_id !== user.carrier_id) {
+            throw new ForbiddenException('You can only create departments within your carrier.');
+          }
+        } 
       }
 
-      return this.departmentsService.create(CreateDepartmentDto);
+
+      return this.departmentsService.create(CreateDepartmentDto, user);
+
     }
 
   @Get()
